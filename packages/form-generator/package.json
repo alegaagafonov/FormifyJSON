@@ -54,7 +54,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.1",
     "react-hook-form": "^7.43.9",
-    "types-and-schemas": "file:../types-and-schemas",
+    "@formify-json/types-and-schemas": "^0.0.4",
     "zod": "^3.21.4"
   },
   "gitHead": "7e6e6740f77aefbd9a15d65dd4abf51c00e33eb6"
