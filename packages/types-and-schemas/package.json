@@ -5,6 +5,9 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/alegaagafonov/FormifyJSON.git"
@@ -37,5 +40,5 @@
   "dependencies": {
     "zod": "^3.21.4"
   },
-  "gitHead": "03d8fb70446a1b88125eecf43869b261fbe454f5"
+  "gitHead": "e82c8b20f9953e12f29f289985894886ca1b463e"
 }
