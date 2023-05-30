@@ -1,6 +1,6 @@
 {
   "name": "@formify-json/form-generator",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "JSON form builder for React",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -50,11 +50,11 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@formify-json/types-and-schemas": "^0.0.5",
     "@hookform/resolvers": "^3.1.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.1",
     "react-hook-form": "^7.43.9",
-    "@formify-json/types-and-schemas": "^0.0.4",
     "zod": "^3.21.4"
   },
   "gitHead": "7e6e6740f77aefbd9a15d65dd4abf51c00e33eb6"
