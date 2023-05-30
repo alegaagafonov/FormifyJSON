@@ -1,0 +1,19 @@
+{
+  "packages": [
+    "packages/*"
+  ],
+  "version": "0.0.1",
+  "npmClient": "npm",
+  "useWorkspaces": true,
+  "command": {
+    "run": {
+      "stream": true
+    },
+    "bootstrap": {
+      "ignore": "",
+      "npmClientArgs": [
+        "--no-package-lock"
+      ]
+    }
+  }
+}
