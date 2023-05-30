@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { Button } from "@mui/material";
-import { FormInput, FormInputEnum, DisplayCondition } from "types-and-schemas";
+import {
+  FormInput,
+  FormInputEnum,
+  DisplayCondition,
+} from "@formify-json/types-and-schemas";
 import {
   StarRatingInput,
   MultimediaSuggestionInput,
