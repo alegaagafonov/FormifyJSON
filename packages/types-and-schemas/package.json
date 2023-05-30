@@ -1,6 +1,6 @@
 {
   "name": "@formify-json/types-and-schemas",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "types and schemas for formify-json",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
