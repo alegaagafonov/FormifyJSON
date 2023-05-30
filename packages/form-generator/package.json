@@ -1,6 +1,6 @@
 {
   "name": "@formify-json/form-generator",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "JSON form builder for React",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
