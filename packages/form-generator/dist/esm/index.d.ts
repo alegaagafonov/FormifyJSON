@@ -1,1 +1,0 @@
-export { FormifyJSON } from "./FormRenderer";
