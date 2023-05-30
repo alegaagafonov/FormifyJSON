@@ -1,7 +1,7 @@
 // FormInputComponents.tsx
 
 import React, { useState } from "react";
-import { FormInput } from "types-and-schemas";
+import { FormInput } from "@formify-json/types-and-schemas";
 import { RegisterOptions, Controller, useFormContext } from "react-hook-form";
 import { TextField, Box, Typography, Slider, Rating } from "@mui/material";
 import FormHelperText from "@mui/material/FormHelperText";
