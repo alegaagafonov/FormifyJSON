@@ -4,10 +4,29 @@ import useForm from "./useForm";
 import useDisplayedInputs from "./useDisplayInputs";
 import StarRating from "./Inputs/StarRating";
 import MultimediaSuggestion from "./Inputs/MultimediaSuggestion";
-import { FormInput } from "@formify-json/types-and-schemas";
 import PhoneNumber from "./Inputs/PhoneNumber";
+import otpApi from "./optApi";
 import NPS from "./Inputs/NPS";
 import SaveButton from "./SaveButton";
+
+// const inputTypeComponentMap = {
+//   starRating: StarRating,
+//   multimediaSuggestion: MultimediaSuggestion,
+//   phoneNumber: PhoneNumber,
+//   nps: NPS
+// };
+
+interface FormInput {
+  name: string;
+  label: string;
+  type: string;
+  placeholder?: string;
+  displayCondition?: {
+    questionId?: string;
+    operator?: string;
+    value?: any;
+  };
+}
 
 export interface FormProps {
   formInputs: FormInput[];
@@ -16,14 +35,15 @@ export interface FormProps {
   thankYouPage: any;
 }
 
-export const Survey: React.FC<FormProps> = ({
+const Form: React.FC<FormProps> = ({
   thankYouPage,
-  formInputs = [],
+  formInputs,
   initialValues = {},
   onSubmit,
 }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { values, handleChange } = useForm(initialValues);
+  console.log("HEYBRO", values);
   const displayedInputs = useDisplayedInputs(formInputs, values);
 
   const handleInputChange = (name: string, newValue: any) => {
@@ -45,60 +65,86 @@ export const Survey: React.FC<FormProps> = ({
       </Box>
     );
   }
-
   return (
-    <Box component="form" onSubmit={(e) => e.preventDefault()}>
-      {displayedInputs.map((input: FormInput) => {
+    <Box
+      component="div"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        "& .MuiTextField-root": { m: 1, width: "100%" },
+        "& .MuiButton-root": { m: 2 },
+      }}
+    >
+      {displayedInputs.map((input) => {
         const { name, label, type, placeholder } = input;
-        // @ts-ignore
         const inputValue = values[name];
+        const commonBox = (
+          <Box
+            sx={{
+              width: "100%",
+              p: 3,
+              bgcolor: "background.paper",
+              my: 2,
+              borderRadius: 2,
+              boxShadow: 1,
+              boxSizing: "border-box",
+            }}
+          >
+            {/* Input component will be inserted here */}
+          </Box>
+        );
+
         switch (type) {
           case "starRating":
-            return (
-              <StarRating
-                key={name}
-                label={label}
-                value={inputValue}
-                onChange={(newValue: number) =>
-                  handleInputChange(name, newValue)
-                }
-              />
-            );
+            return React.cloneElement(commonBox, {
+              children: (
+                <StarRating
+                  key={name}
+                  label={label}
+                  value={inputValue}
+                  onChange={(newValue) => handleInputChange(name, newValue)}
+                />
+              ),
+            });
           case "multimediaSuggestion":
-            return (
-              <MultimediaSuggestion
-                key={name}
-                label={label}
-                placeholder={placeholder}
-                value={inputValue}
-                onChange={(newValue: string) =>
-                  handleInputChange(name, newValue)
-                }
-              />
-            );
+            return React.cloneElement(commonBox, {
+              children: (
+                // @ts-ignore
+                <MultimediaSuggestion
+                  key={name}
+                  label={label}
+                  placeholder={placeholder}
+                  value={inputValue}
+                  onChange={(newValue) => handleInputChange(name, newValue)}
+                />
+              ),
+            });
           case "phoneNumber":
-            return (
-              <PhoneNumber
-                key={name}
-                label={label}
-                placeholder={placeholder}
-                value={inputValue}
-                onChange={(newValue: string) =>
-                  handleInputChange(name, newValue)
-                }
-              />
-            );
+            return React.cloneElement(commonBox, {
+              children: (
+                <PhoneNumber
+                  key={name}
+                  label={label}
+                  otpApi={otpApi}
+                  // @ts-ignore
+                  placeholder={placeholder}
+                  value={inputValue}
+                  onChange={(newValue) => handleInputChange(name, newValue)}
+                />
+              ),
+            });
           case "nps":
-            return (
-              <NPS
-                key={name}
-                label={label}
-                value={inputValue}
-                onChange={(newValue: number) =>
-                  handleInputChange(name, newValue)
-                }
-              />
-            );
+            return React.cloneElement(commonBox, {
+              children: (
+                <NPS
+                  key={name}
+                  label={label}
+                  value={inputValue}
+                  onChange={(newValue) => handleInputChange(name, newValue)}
+                />
+              ),
+            });
           default:
             return null;
         }
@@ -108,3 +154,5 @@ export const Survey: React.FC<FormProps> = ({
     </Box>
   );
 };
+
+export default Form;

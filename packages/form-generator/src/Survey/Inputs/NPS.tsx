@@ -1,21 +1,29 @@
 import React from "react";
-import { Slider, Typography } from "@mui/material";
+import { Slider, Typography, Box } from "@mui/material";
 
-// @ts-ignore
 const NPS = ({ label, value, onChange }) => {
   return (
-    <div>
+    <Box>
       <Typography gutterBottom>{label}</Typography>
       <Slider
         value={value}
-        // @ts-ignore
-        onChange={(e, newValue) => onChange(newValue)}
+        valueLabelDisplay="auto"
+        onChange={(_, newValue) => onChange(newValue)}
         step={1}
-        marks
         min={0}
         max={10}
       />
-    </div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mb: 1,
+        }}
+      >
+        <Typography>Not likely </Typography>
+        <Typography>Very likely</Typography>
+      </Box>
+    </Box>
   );
 };
 

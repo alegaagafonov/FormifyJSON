@@ -1,8 +1,7 @@
-import React from "react";
-import { TextField } from "@mui/material";
+import React from 'react';
+import { TextField } from '@mui/material';
 
-// @ts-ignore
-const PhoneNumber = ({ label, placeholder, value, onChange }: FormInput) => {
+const PhoneNumber = ({ label, placeholder, value, onChange }) => {
   return (
     <TextField
       fullWidth

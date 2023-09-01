@@ -1,25 +1,23 @@
 import React from "react";
-import { IconButton, Typography } from "@mui/material";
-import Star from "@mui/icons-material/Star";
-import StarBorder from "@mui/icons-material/StarBorder";
+import { Box } from "@mui/material";
+import Rating from "@mui/material/Rating";
+import { InputLabel } from "./InputLabel";
 
-//@ts-ignore
 const StarRating = ({ label, value, onChange }) => {
   return (
-    <div>
-      <Typography component="legend">{label}</Typography>
-      <div>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <IconButton
-            key={star}
-            color={star <= value ? "primary" : "default"}
-            onClick={() => onChange(star)}
-          >
-            {star <= value ? <Star /> : <StarBorder />}
-          </IconButton>
-        ))}
-      </div>
-    </div>
+    <Box>
+      <InputLabel name={label} label={label} />
+      <Rating
+        name="customized-empty"
+        value={value}
+        onChange={(_, newValue) => onChange(newValue)}
+        sx={{
+          "& .MuiRating-icon": {
+            fontSize: "3rem", // Change this value to adjust the size
+          },
+        }}
+      />
+    </Box>
   );
 };
 

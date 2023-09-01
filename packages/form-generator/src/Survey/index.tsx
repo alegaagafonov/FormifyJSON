@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import { Survey as Body } from "./Body";
+import Body from "./Body";
 import { Project } from "@formify-json/types-and-schemas";
 
 export const Survey = (project: Project) => {
