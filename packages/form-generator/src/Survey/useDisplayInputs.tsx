@@ -1,7 +1,6 @@
 // useDisplayedInputs.js
-import { FormInput } from "@formify-json/types-and-schemas";
 const useDisplayedInputs = (inputs: any, values: any) => {
-  return inputs.filter((input: FormInput) => {
+  return inputs.filter((input) => {
     const { displayCondition } = input;
     if (!displayCondition) return true;
 
@@ -9,15 +8,13 @@ const useDisplayedInputs = (inputs: any, values: any) => {
     const questionValue = values[questionId];
 
     switch (operator) {
-      case "any":
+      case 'any':
         return questionValue;
-      case "eq":
+      case 'eq':
         return questionValue === value;
-      case "gte":
-        // @ts-ignore
+      case 'gte':
         return questionValue >= value;
-      case "lte":
-        // @ts-ignore
+      case 'lte':
         return questionValue <= value;
 
       default:

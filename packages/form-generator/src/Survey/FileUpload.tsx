@@ -1,39 +1,36 @@
-import React, { ChangeEvent, useState } from 'react';
-
-import { Box, IconButton, Snackbar } from '@mui/material';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import Videocam from '@mui/icons-material/Videocam';
-import Audiotrack from '@mui/icons-material/Audiotrack';
+import React, { ChangeEvent, useState } from "react";
+import { Box, IconButton, Snackbar } from "@mui/material";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Videocam from "@mui/icons-material/Videocam";
+import Audiotrack from "@mui/icons-material/Audiotrack";
 
 type UploadButtonProps = {
-  type: 'image' | 'video' | 'audio';
-  formData: FormData;
+  type: "image" | "video" | "audio";
+  handleFileChange: (
+    event: ChangeEvent<HTMLInputElement>,
+    name: string
+  ) => void;
   name?: string;
+  formData: any;
 };
 
 const icons = {
   image: <PhotoCamera />,
   video: <Videocam />,
-  audio: <Audiotrack />
+  audio: <Audiotrack />,
 };
 
 const UploadButton: React.FC<UploadButtonProps> = ({
   type,
-  formData,
-  name
+  handleFileChange,
+  name,
 }) => {
   const [open, setOpen] = useState(false);
 
-  const handleUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const fileKey = name || type;
-
-      // Add file validation here if needed
-
-      formData.append(fileKey, file);
-      setOpen(true);
-    }
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    handleFileChange(event, type);
+    //handleFileChange(event);
+    setOpen(true);
   };
 
   const handleClose = () => {
@@ -44,10 +41,10 @@ const UploadButton: React.FC<UploadButtonProps> = ({
     <Box>
       <input
         accept={`${type}/*`}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         id={`icon-button-file-${name || type}`}
         type="file"
-        onChange={handleUpload}
+        onChange={handleChange}
       />
       <label htmlFor={`icon-button-file-${name || type}`}>
         <IconButton

@@ -5,7 +5,15 @@ import { InputLabel } from "./InputLabel";
 
 const StarRating = ({ label, value, onChange }) => {
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+      }}
+    >
       <InputLabel name={label} label={label} />
       <Rating
         name="customized-empty"

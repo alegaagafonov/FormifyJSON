@@ -1,71 +1,85 @@
-import React, { useState } from 'react';
-import { Box, Button, TextField, CircularProgress, Alert } from '@mui/material';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { InputLabel } from './InputLabel';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
-
-interface OtpApi {
-  sendCode: (phoneNumber: string) => Promise<void>;
-  verifyCode: ({ phoneNumber, code }) => Promise<void>;
-}
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  CircularProgress,
+  Alert,
+  Snackbar,
+} from "@mui/material";
+import { SxProps } from "@mui/system";
+import { Theme } from "@mui/material/styles";
+import { InputLabel } from "./InputLabel";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { usePhoneVerification } from "../useFormVerification"; // Import the usePhoneVerification hook
 
 interface PhoneVerificationProps {
   label: string;
-  otpApi: OtpApi;
+  projectId: string; // Add a projectId prop
+  api: any;
 }
 
 const PhoneVerification: React.FC<PhoneVerificationProps> = ({
   label,
-  otpApi
+  projectId,
+  api,
 }) => {
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [code, setCode] = useState<string>('');
-  const [sendCodeLoading, setSendCodeLoading] = useState<boolean>(false);
-  const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
+  const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  //const [code, setCode] = useState<string>('');
   const [showCodeInput, setShowCodeInput] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+
+  const {
+    verificationCode,
+    verificationError,
+    sendingCode,
+    verifyingUser,
+    setVerificationCode,
+    sendCode,
+    verifyUser,
+  } = usePhoneVerification(api); // Use the usePhoneVerification hook
+
+  const handleVerifyUser = async () => {
+    try {
+      await verifyUser({ phoneNumber, code: verificationCode });
+      setSuccessSnackbarOpen(true);
+    } catch (error) {
+      // handle error
+    }
+  };
+
+  const handleSnackbarClose = (_, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessSnackbarOpen(false);
+  };
 
   const handleSendCode = async () => {
-    setSendCodeLoading(true);
-    setError(null);
-
     try {
-      await otpApi.sendCode(phoneNumber);
+      await sendCode({ phoneNumber, projectId });
       setShowCodeInput(true);
-    } catch (err) {
-      setError('Failed to send code. Please try again.');
+    } catch (error) {
+      console.error(error);
     }
-
-    setSendCodeLoading(false);
   };
 
-  const handleVerifyCode = async () => {
-    setVerifyLoading(true);
-    setError(null);
-
-    try {
-      await otpApi.verifyCode({ phoneNumber, code });
-      // Handle success (e.g., navigate to another page, show a success message, etc.)
-    } catch (err) {
-      setError('Failed to verify code. Please try again.');
-    }
-
-    setVerifyLoading(false);
-  };
+  // const handleCloseNotification = () => {
+  //   setSuccessSnackbarOpen(false);
+  // };
 
   const inputLabelSx: SxProps<Theme> = {
-    '& .MuiInputBase-root': {
-      height: '35px',
-      padding: '6px 12px'
+    "& .MuiInputBase-root": {
+      height: "35px",
+      padding: "6px 12px",
     },
-    '& .MuiInputLabel-root': {
-      transform: 'translate(14px, 10px) scale(1)'
+    "& .MuiInputLabel-root": {
+      transform: "translate(14px, 10px) scale(1)",
     },
-    '& .MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)'
-    }
+    "& .MuiInputLabel-shrink": {
+      transform: "translate(14px, -6px) scale(0.75)",
+    },
   };
 
   return (
@@ -74,23 +88,23 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
       <Box
         display="flex"
         alignItems="center"
-        sx={{ ml: 0, height: '35px !important', width: '300px' }}
+        sx={{ ml: 0, height: "35px !important", width: "300px" }}
       >
         <PhoneInput
-          country={'us'}
+          country={"us"}
           value={phoneNumber}
           onChange={setPhoneNumber}
           placeholder=""
-          containerStyle={{ width: '100%' }}
+          containerStyle={{ width: "70%" }}
         />
         <Box>
           <Button
             variant="contained"
             color="primary"
             onClick={handleSendCode}
-            sx={{ ml: 1, height: '35px !important', width: '150px' }}
+            sx={{ ml: 1, height: "35px !important", width: "150px" }}
           >
-            {sendCodeLoading ? <CircularProgress size={24} /> : 'Send Code'}
+            {sendingCode ? <CircularProgress size={24} /> : "Send Code"}
           </Button>
         </Box>
       </Box>
@@ -99,30 +113,36 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
           <TextField
             label="Code"
             variant="outlined"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            disabled={verifyLoading}
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            disabled={verifyingUser}
             sx={{
               ...inputLabelSx,
-              width: '80px !important',
-              ml: '0px !important'
+              width: "110px !important",
+              ml: "0px !important",
             }}
           />
           <Button
             variant="contained"
             color="primary"
-            onClick={handleVerifyCode}
-            sx={{ ml: 1, height: '35px !important' }}
+            onClick={handleVerifyUser}
+            sx={{ ml: 1, height: "35px !important" }}
           >
-            {verifyLoading ? <CircularProgress size={24} /> : 'Verify Code'}
+            {verifyingUser ? <CircularProgress size={24} /> : "Verify Code"}
           </Button>
         </Box>
       )}
-      {error && (
+      {verificationError && (
         <Alert severity="error" sx={{ mt: 2 }}>
-          {error}
+          {verificationError}
         </Alert>
       )}
+      <Snackbar
+        open={successSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message="User successfully verified!"
+      />
     </Box>
   );
 };

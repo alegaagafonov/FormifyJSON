@@ -9,6 +9,7 @@ type MultimediaSuggestionProps = {
   value: string;
   onChange: (newValue: string) => void;
   formData: FormData;
+  handleFileChange: any;
 };
 
 const MultimediaSuggestion: React.FC<MultimediaSuggestionProps> = ({
@@ -17,6 +18,7 @@ const MultimediaSuggestion: React.FC<MultimediaSuggestionProps> = ({
   value,
   onChange,
   formData,
+  handleFileChange,
 }) => {
   return (
     <Box>
@@ -29,8 +31,16 @@ const MultimediaSuggestion: React.FC<MultimediaSuggestionProps> = ({
         style={{ width: "100%", borderColor: "#D3D3D3" }}
       />
       <Box display="flex" justifyContent="space-between">
-        <UploadButton formData={formData} type="image" />
-        <UploadButton formData={formData} type="audio" />
+        <UploadButton
+          formData={formData}
+          type="image"
+          handleFileChange={handleFileChange}
+        />
+        <UploadButton
+          formData={formData}
+          type="audio"
+          handleFileChange={handleFileChange}
+        />
       </Box>
     </Box>
   );

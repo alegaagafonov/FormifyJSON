@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
+import { CheckCircleOutline } from "@mui/icons-material";
 import useForm from "./useForm";
+import { Project } from "@formify-json/types-and-schemas";
+import { green } from "@mui/material/colors";
 import useDisplayedInputs from "./useDisplayInputs";
 import StarRating from "./Inputs/StarRating";
 import MultimediaSuggestion from "./Inputs/MultimediaSuggestion";
 import PhoneNumber from "./Inputs/PhoneNumber";
-import otpApi from "./optApi";
+import { ShareAPIInput } from "./Inputs/ShareApi";
 import NPS from "./Inputs/NPS";
+import { Api } from "./index";
 import SaveButton from "./SaveButton";
 
 // const inputTypeComponentMap = {
@@ -33,35 +37,121 @@ export interface FormProps {
   initialValues?: any;
   onSubmit?: (values: any) => void;
   thankYouPage: any;
+  project: Project;
+  api: Api;
 }
+
+// export interface ShareInformation {
+//   message: string;
+//   url: string;
+//   title: string;
+// }
 
 const Form: React.FC<FormProps> = ({
   thankYouPage,
   formInputs,
-  initialValues = {},
-  onSubmit,
+  initialValues = { nps: 5 },
+  project,
+  api,
 }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { values, handleChange } = useForm(initialValues);
+  const { values, handleChange, handleFileChange, handleSubmit } = useForm(
+    initialValues,
+    api
+  );
   console.log("HEYBRO", values);
   const displayedInputs = useDisplayedInputs(formInputs, values);
 
   const handleInputChange = (name: string, newValue: any) => {
-    handleChange({ target: { name, value: newValue } });
+    const event = {
+      target: {
+        name,
+        value: newValue,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+    handleChange(event);
   };
 
   const handleFormSubmit = () => {
-    if (onSubmit) {
-      onSubmit(values);
+    console.log("values", values);
+    if (handleSubmit) {
+      handleSubmit("hello");
     }
     setIsSubmitted(true);
   };
 
+  const commonBox = (
+    <Box
+      sx={{
+        width: "100%",
+        p: 3,
+        bgcolor: "background.paper",
+        my: 2,
+        borderRadius: 2,
+        boxShadow: 1,
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Input component will be inserted here */}
+    </Box>
+  );
+
   if (isSubmitted) {
+    // @ts-ignore
+    console.log("project", project, values.nps);
     return (
       <Box>
-        <Typography variant="h4">{thankYouPage.title}</Typography>
-        <Typography variant="body1">{thankYouPage.message}</Typography>
+        <Box
+          component="div"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            "& .MuiTextField-root": { m: 1, width: "100%" },
+            "& .MuiButton-root": { m: 2 },
+            p: 3,
+            bgcolor: "background.paper",
+            my: 2,
+            boxShadow: 1,
+            boxSizing: "border-box",
+          }}
+        >
+          {/* <Box
+          sx={{
+            width: "100%",
+
+            borderRadius: 2,
+            alignItems: "center",
+          }}
+        > */}
+          <CheckCircleOutline sx={{ fontSize: 100, color: green[500] }} />
+          <Typography variant="h4" component="h1" gutterBottom>
+            {thankYouPage?.title || ""}
+          </Typography>
+          <Typography variant="h6" component="p" gutterBottom>
+            {thankYouPage?.title || ""}
+          </Typography>
+        </Box>
+        {values.nps < 7 && (
+          <Box
+            sx={{
+              width: "100%",
+              p: 3,
+              bgcolor: "background.paper",
+              my: 2,
+              borderRadius: 2,
+              boxShadow: 1,
+              boxSizing: "border-box",
+            }}
+          >
+            {/* @ts-ignore */}
+
+            <ShareAPIInput
+              shareData={project.shareData}
+              shareMeta={project.shareMeta}
+            />
+          </Box>
+        )}
       </Box>
     );
   }
@@ -79,21 +169,6 @@ const Form: React.FC<FormProps> = ({
       {displayedInputs.map((input) => {
         const { name, label, type, placeholder } = input;
         const inputValue = values[name];
-        const commonBox = (
-          <Box
-            sx={{
-              width: "100%",
-              p: 3,
-              bgcolor: "background.paper",
-              my: 2,
-              borderRadius: 2,
-              boxShadow: 1,
-              boxSizing: "border-box",
-            }}
-          >
-            {/* Input component will be inserted here */}
-          </Box>
-        );
 
         switch (type) {
           case "starRating":
@@ -114,6 +189,7 @@ const Form: React.FC<FormProps> = ({
                 <MultimediaSuggestion
                   key={name}
                   label={label}
+                  handleFileChange={handleFileChange}
                   placeholder={placeholder}
                   value={inputValue}
                   onChange={(newValue) => handleInputChange(name, newValue)}
@@ -126,9 +202,10 @@ const Form: React.FC<FormProps> = ({
                 <PhoneNumber
                   key={name}
                   label={label}
-                  otpApi={otpApi}
+                  api={api}
                   // @ts-ignore
                   placeholder={placeholder}
+                  projectId={project._id}
                   value={inputValue}
                   onChange={(newValue) => handleInputChange(name, newValue)}
                 />
